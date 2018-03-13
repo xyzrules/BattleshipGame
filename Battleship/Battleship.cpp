@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "AI.h"
 #define first ft
 #define second sd
 #define push_back pb
@@ -11,30 +12,24 @@ const int oo = 1e8;
 
 #define struct shipGrid sG
 
-bool vsAI = 0, vsP2 = 0;
-
 void play2Player();
 
-void playWithAI();
-
+//main menu ui
 void mainMenu() {
 	cout << "enter 1 to play with ai" << endl << "enter 2 to play in 2-player mode" << endl << "any number to exit" << endl;
 	int n;
 	cin >> n;
 	if (n == 1) {
-		vsAI = 1;
 		playWithAI();
-		vsAI = 0;
 	}
 	else if (n == 2) {
-		vsP2 = 1;
 		play2Player();
-		vsP2 = 0;
 	}
 }
 
+
 void play2Player() {
-	sG player1
+
 }
 
 void battleField() {
@@ -45,9 +40,7 @@ void deployPhasePlayer(sG player) {
 
 }
 
-void deployPhaseAI(sG player) {
 
-}
 
 void attackPhase(sG player) {
 
@@ -81,10 +74,6 @@ bool fire(int posx, int posy, sG &op) {
 	return hit;
 }
 
-void AI() {
-
-}
-
 void updateField(sG &op) {
 	for (int i = 1;i <= 10;++i) {
 		for (int j = 1;j <= 10;++j) {
@@ -94,20 +83,6 @@ void updateField(sG &op) {
 	}
 }
 
-
-void mainGame() {
-	sG p1, p2;
-	bool gameOver = false;
-	if (vsAI) {
-
-	}
-	else if (vsP2) {
-
-	}
-	while (!gameOver) {
-
-	}
-}
 
 /*
 //Starts up SDL and creates window
