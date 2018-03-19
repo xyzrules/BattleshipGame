@@ -10,78 +10,42 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 const int oo = 1e8;
 
-#define struct shipGrid sG
+void closeGame();
+void mainMenu();
+void battleField();
+void playGame(int n);
 
-void play2Player();
+//shut down application
+void closeGame() {
+
+}
 
 //main menu ui
 void mainMenu() {
 	cout << "enter 1 to play with ai" << endl << "enter 2 to play in 2-player mode" << endl << "any number to exit" << endl;
 	int n;
 	cin >> n;
-	if (n == 1) {
-		playWithAI();
-	}
-	else if (n == 2) {
-		play2Player();
-	}
-}
-
-
-void play2Player() {
-
+	if (n == 1 || n == 2)
+		playGame(n);
+	else
+		closeGame();
 }
 
 void battleField() {
 
 }
 
-void deployPhasePlayer(sG player) {
 
+void playGame(int n) {
+	if (n == 1)	playWithAI();
 }
 
 
 
-void attackPhase(sG player) {
 
-}
 
-//update field after each fire attempt
-void updateField(sG &);
 
-//struct for player's grid field
-struct shipGrid {
-	int s[12][12] = { 0 };
-	//s = abb;
-	//a : 0 = none; 1 = banned position; 2 = ship; 3 = missed; 4 = ship hit; 5 = ship destroyed; 6 = banned position revealed;
-	//bb: ship number 01 -> 10
-	int shipCount = 10;
-};
 
-//
-bool fire(int posx, int posy, sG &op) {
-	int x = posx, y = posy;
-	int a = s[x][y] / 100, bb = s[x][y] % 100;
-	bool hit = true;
-	if (a < 2) {
-		op.s[x][y] = 3 * 100 + bb;
-		hit = false;
-	}
-	else if (a == 2) {
-		op.s[x][y] = 4 * 100 + bb;
-	}
-	updateField(&op);
-	return hit;
-}
-
-void updateField(sG &op) {
-	for (int i = 1;i <= 10;++i) {
-		for (int j = 1;j <= 10;++j) {
-			int a = s[x][y] / 100, bb = s[x][y] % 100;
-			if (a==)
-		}
-	}
-}
 
 
 /*
@@ -206,6 +170,7 @@ SDL_Surface* loadSurface(std::string path)
 */
 int main(int argc, char* args[])
 {
+	mainMenu();
 	/*
 	//Start up SDL and create window
 	if (!init())
