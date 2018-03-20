@@ -1,0 +1,19 @@
+#pragma once
+#include "stdafx.h"
+#include "ShipGrid.h"
+
+using namespace std;
+
+class Game
+{
+	bool gameOver = 0;
+public:
+	Game();
+	~Game();
+	void playGame(sG &p1, sG &p2, int cpu);
+	void playWithCPU();
+	void playWithP2();
+	void deployPhase(sG &p, int cpu);
+	bool isGameOver();
+	void fireAt(sG &p, int cpu);
+};
