@@ -1,13 +1,15 @@
 #pragma once
 #include "stdafx.h"
 
+using namespace std;
+
 class shipGrid
 {
 	int s[13][13] = { 0 };
 	//s = abb;
 	//a : 0 = none; 1 = banned position; 2 = ship; 3 = missed; 4 = ship hit; 5 = ship destroyed; 6 = banned position revealed;
 	//bb: ship number 01 -> 10
-	int shipCount = 10;
+	int shipCount = 20;
 
 	int shipLength[11] = { 4, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 	int surroundX[8] = { 0,1,-1,-1,-1,0,1,1 };
@@ -25,7 +27,5 @@ public:
 
 	void revealField();
 
-	bool continueGame() {
-		return (shipCount > 0);
-	}
+	bool continueGame();
 };

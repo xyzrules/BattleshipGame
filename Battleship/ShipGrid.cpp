@@ -17,7 +17,7 @@ bool sG::fireHit(int posx, int posy) {
 	updateField();
 	revealField();
 	return cout << "Result of fire: " << hit << endl, hit;
-}
+} 
 
 //s = abb;
 //a : 0 = none; 1 = banned position; 2 = ship; 3 = missed; 4 = ship hit; 5 = ship destroyed; 6 = banned position revealed;
@@ -27,7 +27,7 @@ void sG::updateField() {
 	for (int i = 1;i <= 10;++i) {
 		for (int j = 1;j <= 10;++j) {
 			int a = s[i][j] / 100, bb = s[i][j] % 100;
-			if (shipLength[bb] == -1) {
+			if (shipLength[bb] == -1 && a != 5) {
 				a = 5;
 				shipCount--;
 				for (int k = 0;k <= 7;++k) {
@@ -77,4 +77,8 @@ bool sG::checkShipPosition(int x, int y, int dir, int shipNumber) {
 	revealField();
 
 	return cout << "Create ship at " << x << " " << y << " " << dir << " with length: " << shipLength[shipNumber] << endl, true;
+}
+
+bool sG::continueGame() {
+	return (shipCount > 0);
 }

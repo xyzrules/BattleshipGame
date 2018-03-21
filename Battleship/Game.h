@@ -11,8 +11,7 @@ public:
 	Game();
 	~Game();
 	void playGame(sG &p1, sG &p2, int cpu);
-	void playWithCPU();
-	void playWithP2();
+	void preDeploy(int cpu);
 	void deployPhase(sG &p, int cpu);
 	bool isGameOver();
 	void fireAt(sG &p, int cpu);

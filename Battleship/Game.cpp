@@ -4,22 +4,14 @@ Game::Game() {
 	cout << "START GAME" << endl;
 }
 
-void Game::playWithCPU() {
-	sG CPU, P1;
-	cout << "P1 deploy phase" << endl;
-	deployPhase(P1, 1);
-	cout << "CPU deploy phase" << endl;
-	deployPhase(CPU, 1);
-	playGame(P1, CPU, 1);
-}
-
-void Game::playWithP2() {
-	sG P1, P2;
+void Game::preDeploy(int cpu) {
+	sG P2, P1;
 	cout << "P1 deploy phase" << endl;
 	deployPhase(P1, 0);
-	cout << "P2 deploy phase" << endl;
-	deployPhase(P2, 0);
-	playGame(P1, P2, 0);
+	if (cpu)	cout << "CPU deploy phase" << endl;
+	else	cout << "P2 deploy phase" << endl;
+	deployPhase(P2, cpu);
+	playGame(P1, P2, cpu);
 }
 
 void Game::deployPhase(sG &p, int cpu) {
@@ -48,9 +40,13 @@ void Game::deployPhase(sG &p, int cpu) {
 void Game::playGame(sG &p1 ,sG &p2, int cpu) {
 	while (!gameOver) {
 		fireAt(p2, 0);
-		cout << "Change turn" << endl;
-		fireAt(p1, cpu);
-		cout << "Change turn" << endl;
+		if (!gameOver) {
+			cout << "Change turn" << endl;
+			fireAt(p1, cpu);
+		}
+		if (!gameOver) {
+			cout << "Change turn" << endl;
+		}
 	}
 }
 
@@ -71,9 +67,10 @@ void Game::fireAt(sG &p, int cpu) {
 		if (!p.fireHit(x, y))
 			turnOver = true;
 		if (!p.continueGame()) {
-			gameOver = false;
+			gameOver = true;
 			turnOver = true;
 		}
+		cout << "turn over" << turnOver << endl;
 	}
 }
 
