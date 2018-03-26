@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{c6223f38-863f-4811-b5be-cbcbe9b27d5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Draw.cpp">
@@ -52,5 +55,64 @@
     <Image Include="_Playfield\blackx.png">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Debug\Battleship.exe">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\Battleship.ilk">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\Battleship.pdb">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libFLAC-8.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libfreetype-6.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libjpeg-9.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libmodplug-1.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libmpg123-0.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libogg-0.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libpng16-16.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libtiff-5.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libvorbis-0.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libvorbisfile-3.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\libwebp-7.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\SDL2.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\SDL2_image.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\SDL2_mixer.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\SDL2_ttf.dll">
+      <Filter>Debug</Filter>
+    </None>
+    <None Include="..\Debug\zlib1.dll">
+      <Filter>Debug</Filter>
+    </None>
   </ItemGroup>
 </Project>

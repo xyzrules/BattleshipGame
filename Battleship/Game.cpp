@@ -7,7 +7,7 @@ Game::Game() {
 void Game::preDeploy(int cpu) {
 	sG P2, P1;
 	cout << "P1 deploy phase" << endl;
-	deployPhase(P1, 0);
+	deployPhase(P1, cpu);
 	if (cpu)	cout << "CPU deploy phase" << endl;
 	else	cout << "P2 deploy phase" << endl;
 	deployPhase(P2, cpu);
@@ -39,7 +39,7 @@ void Game::deployPhase(sG &p, int cpu) {
 
 void Game::playGame(sG &p1 ,sG &p2, int cpu) {
 	while (!gameOver) {
-		fireAt(p2, 0);
+		fireAt(p2, cpu);
 		if (!gameOver) {
 			cout << "Change turn" << endl;
 			fireAt(p1, cpu);

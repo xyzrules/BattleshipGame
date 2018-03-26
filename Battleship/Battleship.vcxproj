@@ -138,6 +138,27 @@
     <Image Include="..\grid10by10withbg506099.png" />
     <Image Include="_Playfield\blackx.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Debug\Battleship.exe" />
+    <None Include="..\Debug\Battleship.ilk" />
+    <None Include="..\Debug\Battleship.pdb" />
+    <None Include="..\Debug\libFLAC-8.dll" />
+    <None Include="..\Debug\libfreetype-6.dll" />
+    <None Include="..\Debug\libjpeg-9.dll" />
+    <None Include="..\Debug\libmodplug-1.dll" />
+    <None Include="..\Debug\libmpg123-0.dll" />
+    <None Include="..\Debug\libogg-0.dll" />
+    <None Include="..\Debug\libpng16-16.dll" />
+    <None Include="..\Debug\libtiff-5.dll" />
+    <None Include="..\Debug\libvorbis-0.dll" />
+    <None Include="..\Debug\libvorbisfile-3.dll" />
+    <None Include="..\Debug\libwebp-7.dll" />
+    <None Include="..\Debug\SDL2.dll" />
+    <None Include="..\Debug\SDL2_image.dll" />
+    <None Include="..\Debug\SDL2_mixer.dll" />
+    <None Include="..\Debug\SDL2_ttf.dll" />
+    <None Include="..\Debug\zlib1.dll" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
