@@ -4,29 +4,31 @@ Game::Game() {
 	cout << "START GAME" << endl;
 }
 
-void Game::preDeploy(int cpu) {
+void Game::mainGame(int cpu) {
 	sG P2, P1;
 	cout << "P1 deploy phase" << endl;
 	deployPhase(P1, cpu);
 	if (cpu)	cout << "CPU deploy phase" << endl;
 	else	cout << "P2 deploy phase" << endl;
 	deployPhase(P2, cpu);
-	playGame(P1, P2, cpu);
+	battlePhase(P1, P2, cpu);
 }
 
 void Game::deployPhase(sG &p, int cpu) {
 	if (cpu) srand(time(0));
 	for (int i = 1;i <= 10;++i) {
-		bool placeCorrect = false;
+		bool placeCorrect;
+		cout << "Ship number " << i << endl;
 		do {
+			placeCorrect = false;
 			//dir : 0 = horizontal; 1 = vertical
-			int n, dir, x, y;
+			int dir, x, y;
 			if (cpu) {
-				n = rand() % 100, dir = rand() % 2;
-				x = n % 10 + 1, y = n / 10 + 1;
+				dir = rand() % 2;
+				x = rand() % 10 + 1, y = rand() % 10 + 1;
 			}
 			else {
-				cout << "Ship number " << i << endl;
+				
 				cout << "Choose your pos from (1 1) to (10 10): ";
 				cin >> x >> y;
 				cout << "Choose your direction (0 for horizontal, 1 for vertical): ";
@@ -37,41 +39,47 @@ void Game::deployPhase(sG &p, int cpu) {
 	}
 }
 
-void Game::playGame(sG &p1 ,sG &p2, int cpu) {
-	while (!gameOver) {
-		fireAt(p2, cpu);
-		if (!gameOver) {
-			cout << "Change turn" << endl;
-			fireAt(p1, cpu);
+void Game::battlePhase(sG &p1 ,sG &p2, int cpu) {
+	while (true) {
+		while (fireAt(p2, 1)) {
+			cout << endl << endl << " " << p2.continueGame() << endl;
+			if (!p2.continueGame()){
+				cout << "p1 wins\n";
+				gameOver = true;
+				break;
+			}
 		}
-		if (!gameOver) {
-			cout << "Change turn" << endl;
+		cout << endl << endl << " " << p2.continueGame() << endl;
+		if (gameOver)	break;
+		cout << endl << "Change Turn" << endl;
+		while (fireAt(p1, cpu)) {
+			cout << endl << endl << " " << p1.continueGame() << endl;
+			if (!p1.continueGame()) {
+				cout << "p2 wins\n";
+				gameOver = true;
+				break;
+			}
 		}
+		cout << endl << endl << " " << p1.continueGame() << endl;
+		if (gameOver)	break;
+		cout << endl << "Change Turn" << endl;
 	}
 }
 
-void Game::fireAt(sG &p, int cpu) {
-	bool turnOver = false;
-	while (!turnOver) {
-		int x, y;
-		if (!cpu) {
-			cout << "x: ";
-			cin >> x;
-			cout << "y: ";
-			cin >> y;			
-		}
-		else {
-			x = rand() % 10 + 1;
-			y = rand() % 10 + 1;
-		}
-		if (!p.fireHit(x, y))
-			turnOver = true;
-		if (!p.continueGame()) {
-			gameOver = true;
-			turnOver = true;
-		}
-		cout << "turn over" << turnOver << endl;
+bool Game::fireAt(sG &p, int cpu) {
+	int x, y;
+	if (!cpu) {
+		cout << "x: ";
+		cin >> x;
+		cout << "y: ";
+		cin >> y;			
 	}
+	else {
+		//cpu code here
+		x = rand() % 10 + 1;
+		y = rand() % 10 + 1;
+	}
+	return p.fireHit(x, y);
 }
 
 Game::~Game() {

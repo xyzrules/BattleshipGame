@@ -10,9 +10,12 @@ class Game
 public:
 	Game();
 	~Game();
-	void playGame(sG &p1, sG &p2, int cpu);
-	void preDeploy(int cpu);
+
+	void battlePhase(sG &p1, sG &p2, int cpu);
+	
+	void mainGame(int cpu);
+	
 	void deployPhase(sG &p, int cpu);
-	bool isGameOver();
-	void fireAt(sG &p, int cpu);
+	
+	bool fireAt(sG &p, int cpu);
 };

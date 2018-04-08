@@ -2,6 +2,14 @@
 
 using namespace std;
 
+void setCpuDir(sG cpu, int dir) {
+	cpu.cpuDir = dir;
+}
+
+int getCpuDir(sG cpu) {
+	return cpu.cpuDir;
+}
+
 bool sG::fireHit(int posx, int posy) {
 	int x = posx, y = posy;
 	int a = s[x][y] / 100, bb = s[x][y] % 100;
@@ -13,6 +21,7 @@ bool sG::fireHit(int posx, int posy) {
 		hit = true;
 		s[x][y] = 4 * 100 + bb;
 		shipLength[bb]--;
+		shipCount--;
 	}
 	updateField();
 	revealField();
@@ -29,7 +38,6 @@ void sG::updateField() {
 			int a = s[i][j] / 100, bb = s[i][j] % 100;
 			if (shipLength[bb] == -1 && a != 5) {
 				a = 5;
-				shipCount--;
 				for (int k = 0;k <= 7;++k) {
 					if (s[i + surroundX[k]][j + surroundY[k]] == 100) {
 						s[i + surroundX[k]][j + surroundY[k]] = 600;
@@ -42,6 +50,7 @@ void sG::updateField() {
 }
 
 void sG::revealField() {
+	
 	cout << endl;
 	for (int i = 1;i <= 10;++i) {
 		for (int j = 1;j <= 10;++j) {
@@ -50,13 +59,19 @@ void sG::revealField() {
 		cout << endl;
 	}
 	cout << endl;
+	
+}
+
+bool sG::checkOutOfBounds(int x, int y) {
+	if (x >= 0 && y >= 0 && x <= 10 && y <= 10)	return true;
+	else return false;
 }
 
 bool sG::checkShipPosition(int x, int y, int dir, int shipNumber) {
 	//dir : 0 = horizontal; 1 = vertical
 	int lastX = x + surroundX[dir] * shipLength[shipNumber], lastY = y + surroundY[dir] * shipLength[shipNumber];
-	if (lastX <= 10 && lastY <= 10) {
-		if (!s[x][y] && !s[lastX][lastY]) {
+	if (checkOutOfBounds(lastX, lastY)) {
+		if (s[x][y] == 0 && s[lastX][lastY] == 0) {
 			for (int i = x;i <= lastX;++i) {
 				for (int j = y;j <= lastY;++j) {
 					//create ship (2bb)
@@ -72,13 +87,14 @@ bool sG::checkShipPosition(int x, int y, int dir, int shipNumber) {
 		}
 		else return cout << "Ship failed to place: Banned position" << endl, false;
 	}
-	else return cout << "Ship failed to place: Out of bounds" << endl, false;
-
+	else {
+		return cout << "Ship failed to place: Out of bounds" << endl, false;
+	}
 	revealField();
-
 	return cout << "Create ship at " << x << " " << y << " " << dir << " with length: " << shipLength[shipNumber] << endl, true;
+	
 }
 
 bool sG::continueGame() {
-	return (shipCount > 0);
+	return cout << shipCount << endl, (shipCount > 0);
 }
