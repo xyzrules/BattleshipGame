@@ -78,8 +78,8 @@ bool LButton::handleEvent( SDL_Event* e)
 	return success;
 }
 	
-void LButton::render(LTexture &gButtonSpriteSheetTexture, SDL_Renderer* &gRenderer)
+void LButton::render(LTexture &gButtonSpriteSheetTexture, SDL_Renderer* &gRenderer, double angle)
 {
 	//Show current button sprite
-	gButtonSpriteSheetTexture.render( mPosition.x, mPosition.y, gRenderer, gSpriteClips[ mCurrentSprite ]);
+	gButtonSpriteSheetTexture.render( mPosition.x, mPosition.y, gRenderer, gSpriteClips[ mCurrentSprite ], angle);
 }

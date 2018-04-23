@@ -146,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\grid10by10withbg506099.png" />
+    <Image Include="_Menu\battleship_background.png" />
+    <Image Include="_Menu\start_button.png" />
     <Image Include="_Playfield\blackx.png" />
   </ItemGroup>
   <ItemGroup>

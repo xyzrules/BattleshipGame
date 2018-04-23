@@ -31,7 +31,7 @@ bool LTexture::loadFromFile(std::string path, SDL_Renderer* &gRenderer)
 	else
 	{
 		//Color key image
-		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
+		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 50, 60, 99));
 
 		//Create texture from surface pixels
 		newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
@@ -56,7 +56,7 @@ bool LTexture::loadFromFile(std::string path, SDL_Renderer* &gRenderer)
 }
 /*
 #ifdef _SDL_TTF_H
-bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor)
+bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor, SDL_Renderer* &gRenderer)
 {
 	//Get rid of preexisting texture
 	free();
@@ -124,16 +124,15 @@ void LTexture::setAlpha(Uint8 alpha)
 void LTexture::render(int x, int y, SDL_Renderer* &gRenderer, SDL_Rect &clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
 	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { x, y, clip.w, clip.h };
+	SDL_Rect renderQuad = { x, y, mWidth, mHeight};
 	//Set clip rendering dimensions
-	/*
-	if (clip != NULL)
+	
+	if (clip.w != 0 || clip.h != 0)
 	{
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
-		cout << "renderQuad " << renderQuad.w << " " << renderQuad.h << endl;
+		renderQuad.w = clip.w;
+		renderQuad.h = clip.h;
 	}
-	*/
+	
 	//Render to screen
 	SDL_RenderCopyEx(gRenderer, mTexture, &clip, &renderQuad, angle, center, flip);
 }

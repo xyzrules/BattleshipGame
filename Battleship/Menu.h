@@ -13,12 +13,22 @@ enum BUTTON_CHOICE {
 
 class Menu
 {
+	//3 buttons choice
 	BUTTON_CHOICE mCurrentButtonChoice;
-	LButton gButtons[3];
-	LTexture gButtonSpriteSheetTexture;
+	//Button texture
+	LButton mButtons[3];
+	//Sprite sheet used as button clips
+	LTexture mButtonSpriteSheetTexture;
+	//Background texture
+	LTexture mMenuBackground;
 public:
-	void displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer);
 	Menu();
 	~Menu();
+	//Free memories in menu
+	void free();
+	//Load media files in menu
+	bool loadMedia(SDL_Renderer* &gRenderer);
+	//Show menu
+	void displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer);
 };
 

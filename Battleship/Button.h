@@ -23,7 +23,7 @@ public:
 	//Sets button size and sprites
 	void setSize_Sprites(int WIDTH, int HEIGHT);
 	//Shows button sprites
-	void render(LTexture &gButtonSpriteSheetTexture, SDL_Renderer* &gRenderer);
+	void render(LTexture &gButtonSpriteSheetTexture, SDL_Renderer* &gRenderer, double angle = 0.0);
 	
 private:
 	SDL_Rect gSpriteClips[BUTTON_SPRITE_TOTAL];

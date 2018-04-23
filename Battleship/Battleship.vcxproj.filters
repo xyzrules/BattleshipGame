@@ -70,6 +70,12 @@
     <Image Include="_Playfield\blackx.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="_Menu\start_button.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="_Menu\battleship_background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Debug\Battleship.exe">
