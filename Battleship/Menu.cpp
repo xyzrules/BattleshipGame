@@ -15,6 +15,8 @@ Menu::~Menu()
 
 //Free texture memories
 void Menu::free() {
+	TTF_CloseFont(mFont);
+	mFont = NULL;
 	mButtonSpriteSheetTexture.free();
 	mMenuBackground.free();
 	for (int i = 0;i < TOTAL_BUTTONS;++i) {
@@ -22,7 +24,7 @@ void Menu::free() {
 	}
 }
 
-bool Menu::loadMedia(SDL_Renderer* &gRenderer, TTF_Font* &gFont) {
+bool Menu::loadMedia(SDL_Renderer* &gRenderer) {
 	//Load sprite sheet
 	if (!mButtonSpriteSheetTexture.loadFromFile("_Menu/start_button.png", gRenderer))
 	{
@@ -35,42 +37,48 @@ bool Menu::loadMedia(SDL_Renderer* &gRenderer, TTF_Font* &gFont) {
 		return false;
 	}
 	else {
-		//Set buttons size & sprites
-		for (int i = 0;i < TOTAL_BUTTONS;++i) {
-			mButtons[i].setSize_Sprites(300, 200);
+		//Open the font 
+		mFont = TTF_OpenFont("_Menu/Xenotron.ttf", 28);
+		if (mFont == NULL) {
+			printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
+			return false;
 		}
+	}
+	//Set buttons size & sprites
+	for (int i = 0;i < TOTAL_BUTTONS;++i) {
+		mButtons[i].setSize_Sprites(300, 200);
+	}
 
-		//Set buttons in corners
-		mButtons[PLAYER_VS_MODE].setPosition(500, 0);
-		mButtons[PLAYER_VS_CPU].setPosition(500, 200);
-		mButtons[PLAYER_QUIT].setPosition(500, 400);
-	}
-	SDL_Color mColor = {0, 0, 0};
-	if (!mText[PLAYER_VS_MODE].loadFromRenderedText("P1 VS P2", mColor, gRenderer, gFont)) {
+	//Set buttons in corners
+	mButtons[PLAYER_VS_MODE].setPosition(500, 0);
+	mButtons[PLAYER_VS_CPU].setPosition(500, 200);
+	mButtons[PLAYER_QUIT].setPosition(500, 400);
+	//Set ttf for buttons
+	
+	if (!mText[PLAYER_VS_MODE].loadFromRenderedText("P1 VS P2", mColor, gRenderer, mFont)) {
 		printf("Failed to load player vs mode text!\n");
 		return false;
 	}
-	else if (!mText[PLAYER_VS_CPU].loadFromRenderedText("P1 VS CPU", mColor, gRenderer, gFont)) {
-		printf("Failed to load player vs mode text!\n");
+	else if (!mText[PLAYER_VS_CPU].loadFromRenderedText("P1 VS CPU", mColor, gRenderer, mFont)) {
+		printf("Failed to load player vs cpu text!\n");
 		return false;
 	}
-	else if (!mText[PLAYER_QUIT].loadFromRenderedText("QUIT GAME", mColor, gRenderer, gFont)) {
-		printf("Failed to load player vs mode text!\n");
+	else if (!mText[PLAYER_QUIT].loadFromRenderedText("QUIT GAME", mColor, gRenderer, mFont)) {
+		printf("Failed to load player quit text!\n");
 		return false;
 	}
-		
 	
 	return true;
 }
 
-void Menu::displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont) {
+void Menu::displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer) {
 	//Main loop flag
 	bool quitMenu = false;
 
 	//Event handler
 	SDL_Event e;
 
-	if (!loadMedia(gRenderer, gFont)) {
+	if (!loadMedia(gRenderer)) {
 		printf("Load media failed\n");
 	}
 	else {
@@ -118,9 +126,10 @@ void Menu::displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font*
 			{
 				mButtons[i].render(mButtonSpriteSheetTexture, gRenderer);
 			}
-			mText[PLAYER_VS_MODE].render(560, 30, gRenderer, button);
-			mText[PLAYER_VS_CPU].render(500, 200, gRenderer, button);
-			mText[PLAYER_QUIT].render(500, 400, gRenderer, button);
+			//Render text
+			mText[PLAYER_VS_MODE].render(543, 55, gRenderer, button);
+			mText[PLAYER_VS_CPU].render(543, 255, gRenderer, button);
+			mText[PLAYER_QUIT].render(543, 455, gRenderer, button);
 
 			//Update screen
 			SDL_RenderPresent(gRenderer);

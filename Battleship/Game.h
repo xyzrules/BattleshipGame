@@ -8,6 +8,8 @@ const int SHIP_NUMBER = 10;
 const int BUTTON_SIZE = 50;
 const int ARROW_SIZE = 50;
 const double ARROW_ANGLE[4] = { 0.0, 90.0, 180.0, 270.0 };
+const string transitionQuote[8] = { "Change control to Player 1", "Change control to Player 2", "Your Turn To Play", "CPU's Turn To Play", "P1 WINS", "P2 WINS", "YOU WIN", "YOU LOSE" };
+const string phaseQuote[2] = { "DEPLOY PHASE" , "BATTLE PHASE" };
 
 enum gameArrow {
 	UP_ARROW = 0,
@@ -40,14 +42,39 @@ enum gridSprite {
 	GRID_TOTAL_SPRITE = 8
 };
 
+enum choice {
+	UNDO = 0,
+	DONE = 1,
+	TOTAL_CHOICE = 2
+};
+
 class Game
 {
+	int turn;
+	//grid
 	LButton gButtons[BOARD_SIDE + 1][BOARD_SIDE + 1];
-	LButton gArrow[TOTAL_ARROWS];
 	LTexture gButtonSpriteSheetTexture;
+	//arrows
+	LButton gArrow[TOTAL_ARROWS];
 	LTexture gArrowSpriteSheetTexture;
-	LTexture gBackground;
-	LTexture gChoice[3];
+	//undo and done button
+	LTexture gChoiceSpriteSheetTexture;
+	LButton gChoice[TOTAL_CHOICE];
+	//text & buttons
+	TTF_Font* gFont;
+	SDL_Color mColor = { 0, 0, 0 };
+	LTexture gText[TOTAL_CHOICE];
+	SDL_Rect choice_button = { 0, 0, 120, 60 };
+	//transition text
+	LTexture gTransitionText;
+	SDL_Rect transition_space[2] = { { 0, 0, 400, 60 }, {0, 0, 300, 60} };
+	LTexture gPhaseText;
+	SDL_Rect phase_space = { 0, 0, 300, 60 };
+	SDL_Color mColorWhite = { 255, 255, 255 };
+	//background
+	LTexture gBackgroundP1;
+	LTexture gBackgroundP2;
+	SDL_Rect full_screen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	//grid
 	LTexture gGridSpriteSheetTexture;
 	SDL_Rect gSpriteClips[GRID_TOTAL_SPRITE];
@@ -64,6 +91,8 @@ public:
 	bool loadMedia(SDL_Renderer* &gRenderer);
 	//Main game loop
 	bool mainGame(int cpu, SDL_Renderer* &gRenderer);
+	//Transition phase
+	int transitionPhase(int cpu, SDL_Renderer* &gRenderer, int win, int phase);
 	//Deploy phase loop
 	int deployPhase(sG &p, int cpu, SDL_Renderer* &gRenderer);
 	//Battle phase loop

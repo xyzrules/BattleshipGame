@@ -4,17 +4,14 @@
 #include "Menu.h"
 
 using namespace std;
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
-const int oo = 1e8;
 
 //Starts up SDL and creates window
-bool init(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont);
+bool init(SDL_Window* &gWindow, SDL_Renderer* &gRenderer);
 
 //Frees media and shuts down SDL
-void close(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont);
+void close(SDL_Window* &gWindow, SDL_Renderer* &gRenderer);
 
-bool init(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont)
+bool init(SDL_Window* &gWindow, SDL_Renderer* &gRenderer)
 {
 	//Initialization flag
 	bool success = true;
@@ -60,14 +57,6 @@ bool init(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont)
 					printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 					success = false;
 				}
-				else {
-					//Open the font 
-					gFont = TTF_OpenFont("_Menu/global_font.ttf", 28);
-					if (gFont == NULL) {
-						printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
-						success = false;
-					}
-				}
 			}
 		}
 	}
@@ -75,11 +64,8 @@ bool init(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont)
 	return success;
 }
 
-void close(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont)
+void close(SDL_Window* &gWindow, SDL_Renderer* &gRenderer)
 {
-	//Free global font 
-	TTF_CloseFont(gFont); 
-	gFont = NULL;
 	//Destroy window
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -97,12 +83,11 @@ int main(int argc, char* args[])
 
 	SDL_Window* gWindow = NULL;
 	SDL_Renderer* gRenderer = NULL;
-	TTF_Font* gFont = NULL;
 
 	srand(time(0));
 
 	//Start up SDL and create window
-	if (!init(gWindow, gRenderer, gFont))
+	if (!init(gWindow, gRenderer))
 	{
 		printf("Failed to initialize!\n");
 	}
@@ -110,12 +95,12 @@ int main(int argc, char* args[])
 	else
 	{
 		menu = new Menu();
-		menu->displayMenu(gWindow, gRenderer, gFont);
+		menu->displayMenu(gWindow, gRenderer);
 		delete menu;
 	}
 
 	//Free resources and close SDL
-	close(gWindow, gRenderer, gFont);
+	close(gWindow, gRenderer);
 	
 	_getch();
 	return 0;

@@ -27,3 +27,7 @@
 #define first ft
 #define second sd
 #define push_back pb
+
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
+const int oo = 1e8;

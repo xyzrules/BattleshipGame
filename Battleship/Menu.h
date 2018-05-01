@@ -23,16 +23,18 @@ class Menu
 	LTexture mMenuBackground;
 	//Text texture
 	LTexture mText[TOTAL_BUTTONS];
+	TTF_Font* mFont;
+	SDL_Color mColor = { 0, 0, 0 };
 	SDL_Rect full_screen = { 0, 0, 800, 600 };
-	SDL_Rect button = { 0 , 0 , 150, 120 };
+	SDL_Rect button = { 0 , 0 , 200, 80 };
 public:
 	Menu();
 	~Menu();
 	//Free memories in menu
 	void free();
 	//Load media files in menu
-	bool loadMedia(SDL_Renderer* &gRenderer, TTF_Font* &gFont);
+	bool loadMedia(SDL_Renderer* &gRenderer);
 	//Show menu
-	void displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont);
+	void displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer);
 };
 
