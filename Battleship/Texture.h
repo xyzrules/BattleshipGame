@@ -14,12 +14,12 @@ public:
 
 	//Loads image at specified path
 	bool loadFromFile(string path, SDL_Renderer* &gRenderer);
-/*
+
 #ifdef _SDL_TTF_H
 	//Creates image from font string
-	bool loadFromRenderedText(string textureText, SDL_Color textColor);
+	bool loadFromRenderedText(string textureText, SDL_Color textColor, SDL_Renderer* &gRenderer, TTF_Font* &gFont);
 #endif
-*/
+
 	//Deallocates texture
 	void free();
 

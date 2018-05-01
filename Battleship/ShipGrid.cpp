@@ -2,57 +2,61 @@
 
 using namespace std;
 
-void setCpuDir(sG cpu, int dir) {
-	cpu.cpuDir = dir;
-}
 
-int getCpuDir(sG cpu) {
-	return cpu.cpuDir;
-}
-
-bool sG::emptyPosition(int x, int y) {
-	return (s[x][y] == 0);
+int sG::currentState(int x, int y) {
+	return (s[x][y] - s[x][y] % 100) / 100;
 }
 
 bool sG::checkOutOfBounds(int x, int y) {
-	if (x >= 0 && y >= 0 && x <= 10 && y <= 10)	return true;
+	if (x > 0 && y > 0 && x <= 10 && y <= 10)	return true;
 	else return false;
 }
 
 bool sG::checkShipPosition(int x, int y, int dir, int shipNumber) {
-	//undefined direction (set up ship nose)
-	if (dir == 4) {
-
-	}
+	bool success = false;
 	int lastX = x + surroundX[dir] * shipLength[shipNumber], lastY = y + surroundY[dir] * shipLength[shipNumber];
+	//ship can be placed = first piece + last piece available
 	if (checkOutOfBounds(lastX, lastY)) {
-		if (emptyPosition(x,y) && s[lastX][lastY] == 0) {
+		if ((currentState(x, y) == 0 || currentState(x, y) == 7) && currentState(lastX, lastY) == 0) {
 			cout << "Ship can be created" << endl;
+			success = true;
 		}
-		else return cout << "Ship failed to place: Banned position" << endl, false;
+		else cout << "Ship failed to place: Banned position" << endl;
 	}
-	else {
-		return cout << "Ship failed to place: Out of bounds" << endl, false;
+	else cout << "Ship failed to place: Out of bounds" << endl;
+	//revert ship nose
+	if (!success && currentState(x,y) == 7) {
+		s[x][y] = 0;
 	}
-	revealField();
-	return true;
+	return success;
 }
 
 void sG::createShip(int x, int y, int dir, int shipNumber) {
-	int lastX = x + surroundX[dir] * shipLength[shipNumber], lastY = y + surroundY[dir] * shipLength[shipNumber];
-	for (int i = min(x, lastX);i <= max(x, lastX);++i) {
-		for (int j = min(y, lastY);j <= max(y, lastY);++j) {
-			//create ship (2bb)
-			s[i][j] = 200 + shipNumber;
-			//ban position around the ship (100)
-			for (int k = 0;k < 8;++k) {
-				if (s[i + surroundX[k]][j + surroundY[k]] == 0) {
-					s[i + surroundX[k]][j + surroundY[k]] = 100;
+	//undefined direction (set up ship nose)
+	if (dir == 5) {
+		//create nose
+		s[x][y] = 700 + shipNumber;
+		cout << "Nose of ship " << shipNumber << " at " << x << " " << y << " " << endl;
+	}
+	//defined direction (set up entire ship)
+	else {
+		int lastX = x + surroundX[dir] * shipLength[shipNumber], lastY = y + surroundY[dir] * shipLength[shipNumber];
+		for (int i = min(x, lastX);i <= max(x, lastX);++i) {
+			for (int j = min(y, lastY);j <= max(y, lastY);++j) {
+				//create ship (2bb)
+				s[i][j] = 200 + shipNumber;
+				//ban position around the ship (100)
+				for (int k = 0;k < 8;++k) {
+					if (s[i + surroundX[k]][j + surroundY[k]] == 0) {
+						s[i + surroundX[k]][j + surroundY[k]] = 100;
+					}
 				}
 			}
 		}
+		
+		cout << "Create ship " << shipNumber << " at " << x << " " << y << " " << dir << " with length: " << shipLength[shipNumber] << endl;
+		revealField();
 	}
-	cout << "Create ship " << shipNumber << "at " << x << " " << y << " " << dir << " with length: " << shipLength[shipNumber] << endl;
 }
 
 //s = abb;
@@ -107,4 +111,12 @@ bool sG::fireHit(int posx, int posy) {
 
 bool sG::continueGame() {
 	return cout << shipCount << endl, (shipCount > 0);
+}
+
+void setCpuDir(sG cpu, int dir) {
+	cpu.cpuDir = dir;
+}
+
+int getCpuDir(sG cpu) {
+	return cpu.cpuDir;
 }

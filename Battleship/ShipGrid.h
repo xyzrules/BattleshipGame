@@ -3,27 +3,31 @@
 
 using namespace std;
 
-class shipGrid
+
+//class for each player ship grid
+class sG
 {
+	//ship grid
 	int s[13][13] = { 0 };
-	//s = abb;
-	//a : 0 = none; 1 = banned position; 2 = ship; 3 = missed; 4 = ship hit; 5 = ship destroyed; 6 = banned position revealed;
-	//bb: ship number 01 -> 10
+	//ship count by total length
 	int shipCount = 20;
-
+	//cpu (bot) uses only
 	int cpuDir;
-
+	//length for each ship (from 1 -> 10, 0 does nothing)
 	int shipLength[11] = { 4, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
+	//direction
 	int surroundX[8] = { -1,0,1,0,-1,-1,1,1 };
 	int surroundY[8] = { 0,1,0,-1,1,-1,-1,1 };
-
+	
+	//functions for cpu (bot) uses only
 	friend void setCpuDir(sG cpu, int dir);
 	friend int getCpuDir(sG cpu);
 
 public:
 
-	//return if position is empty or not (ship appeared or banned position, etc.)
-	bool emptyPosition(int x, int y);
+	//return current state of 1 specific grid (ship appeared or banned position, etc.)
+	//0 = none; 1 = banned position; 2 = ship; 3 = missed; 4 = ship hit; 5 = ship destroyed; 6 = banned position revealed, 7 = ship head;
+	int currentState(int x, int y);
 
 	//return if ship pos is out of bounds
 	bool checkOutOfBounds(int x, int y);

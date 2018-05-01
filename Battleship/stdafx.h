@@ -24,7 +24,6 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 
-#define shipGrid sG
 #define first ft
 #define second sd
 #define push_back pb

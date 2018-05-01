@@ -14,7 +14,8 @@ enum gameArrow {
 	RIGHT_ARROW = 1,
 	DOWN_ARROW = 2,
 	LEFT_ARROW = 3,
-	TOTAL_ARROWS = 4
+	TOTAL_ARROWS = 4,
+	UNDEFINED = 5
 };
 
 enum gameCondition {
@@ -23,14 +24,37 @@ enum gameCondition {
 	QUIT_GAME = 2
 };
 
+//s = abb;
+//a : 0 = none; 1 = banned position; 2 = ship; 3 = missed; 4 = ship hit; 5 = ship destroyed; 6 = banned position revealed, 7 = ship head;
+//bb: ship number 01 -> 10
+
+enum gridSprite {
+	SHIP_NONE = 0,
+	BANNED_POS = 1,
+	SHIP = 2,
+	MISSED = 3,
+	SHIP_HIT = 4,
+	SHIP_DESTROYED = 5,
+	BANNED_POS_REVEALED = 6,
+	SHIP_NOSE = 7,
+	GRID_TOTAL_SPRITE = 8
+};
+
 class Game
 {
-	LButton gButtons[11][11];
-	LButton gArrow[4];
+	LButton gButtons[BOARD_SIDE + 1][BOARD_SIDE + 1];
+	LButton gArrow[TOTAL_ARROWS];
 	LTexture gButtonSpriteSheetTexture;
 	LTexture gArrowSpriteSheetTexture;
 	LTexture gBackground;
 	LTexture gChoice[3];
+	//grid
+	LTexture gGridSpriteSheetTexture;
+	SDL_Rect gSpriteClips[GRID_TOTAL_SPRITE];
+	int GRID_WIDTH[BOARD_SIDE + 1][BOARD_SIDE + 1], GRID_HEIGHT[BOARD_SIDE + 1][BOARD_SIDE + 1];
+	//battle phase use only
+	gridSprite gridCurrentSprite[BOARD_SIDE + 1][BOARD_SIDE + 1];
+
 public:
 	Game();
 	~Game();

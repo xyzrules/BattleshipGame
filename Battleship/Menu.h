@@ -16,19 +16,23 @@ class Menu
 	//3 buttons choice
 	BUTTON_CHOICE mCurrentButtonChoice;
 	//Button texture
-	LButton mButtons[3];
+	LButton mButtons[TOTAL_BUTTONS];
 	//Sprite sheet used as button clips
 	LTexture mButtonSpriteSheetTexture;
 	//Background texture
 	LTexture mMenuBackground;
+	//Text texture
+	LTexture mText[TOTAL_BUTTONS];
+	SDL_Rect full_screen = { 0, 0, 800, 600 };
+	SDL_Rect button = { 0 , 0 , 150, 120 };
 public:
 	Menu();
 	~Menu();
 	//Free memories in menu
 	void free();
 	//Load media files in menu
-	bool loadMedia(SDL_Renderer* &gRenderer);
+	bool loadMedia(SDL_Renderer* &gRenderer, TTF_Font* &gFont);
 	//Show menu
-	void displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer);
+	void displayMenu(SDL_Window* &gWindow, SDL_Renderer* &gRenderer, TTF_Font* &gFont);
 };
 

@@ -15,12 +15,12 @@ void Game::free() {
 	gButtonSpriteSheetTexture.free();
 	gArrowSpriteSheetTexture.free();
 	gBackground.free();
+	gGridSpriteSheetTexture.free();
 }
 
 bool Game::loadMedia(SDL_Renderer* &gRenderer) {
 	//Load sprite sheet
-	if (!gButtonSpriteSheetTexture.loadFromFile("_Playfield/button_outline.png", gRenderer))
-	{
+	if (!gButtonSpriteSheetTexture.loadFromFile("_Playfield/button_outline.png", gRenderer)){
 		printf("Failed to load button sprite texture!\n");
 		return false;
 	}
@@ -34,6 +34,11 @@ bool Game::loadMedia(SDL_Renderer* &gRenderer) {
 		printf("Failed to load button sprite texture!\n");
 		return false;
 	}
+	//Load grid sprite sheet
+	else if (!gGridSpriteSheetTexture.loadFromFile("_Playfield/grid_color.png", gRenderer)) {
+		printf("Failed to load grid sprite texture!\n");
+		return false;
+	}
 	else {
 		//Set buttons size, sprites & position
 		for (int i = 0;i < BOARD_SIDE;++i) {
@@ -42,6 +47,7 @@ bool Game::loadMedia(SDL_Renderer* &gRenderer) {
 				gButtons[i+1][j+1].setPosition(50 + 51 * i, 50 + 51 * j);
 			}
 		}
+		//Set arrow size, sprites & position
 		for (int i = 0;i < TOTAL_ARROWS; ++i) {
 			gArrow[i].setSize_Sprites(50, 50);
 			if (i == UP_ARROW) gArrow[i].setPosition(675, 300);
@@ -49,7 +55,20 @@ bool Game::loadMedia(SDL_Renderer* &gRenderer) {
 			if (i == DOWN_ARROW) gArrow[i].setPosition(675, 400);
 			if (i == LEFT_ARROW) gArrow[i].setPosition(625, 350);
 		}
-
+		//Set grid size, sprites & position
+		for (int i = 0;i < GRID_TOTAL_SPRITE;++i) {
+			gSpriteClips[i].x = 0;
+			gSpriteClips[i].y = i * 50;
+			gSpriteClips[i].w = 50;
+			gSpriteClips[i].h = 50;
+		}
+		for (int i = 0;i < BOARD_SIDE;++i) {
+			for (int j = 0;j < BOARD_SIDE;++j) {
+				GRID_WIDTH[i + 1][j + 1] = 50 + 51 * i;
+				GRID_HEIGHT[i + 1][j + 1] = 50 + 51 * j;
+				gridCurrentSprite[i][j] = SHIP_NONE;
+			}
+		}
 	}
 	return true;
 }
@@ -62,6 +81,7 @@ bool Game::mainGame(int cpu, SDL_Renderer* &gRenderer) {
 		return true;
 	}
 	else {
+		//Help section for deploy phase
 		//Transition scene add here
 
 		cout << "P1 deploy phase" << endl;
@@ -75,33 +95,40 @@ bool Game::mainGame(int cpu, SDL_Renderer* &gRenderer) {
 		if (deployPhase(P2, cpu, gRenderer) == QUIT_GAME) {
 			return true;
 		}
+		//Help section for battle phase
 		//Transition scene add here
 
 		while (true) {
-			int quitGame = 2;
+			int quitGame = CONTINUE_TURN;
 
 			//p1 turn
-			while ((quitGame = battlePhase(P2, 0, gRenderer)) == CONTINUE_TURN) {
-				cout << endl << endl << " " << P2.continueGame() << endl;
-				if (!P2.continueGame()) {
-					//Winning scene add here
-					cout << "p1 wins\n";
-					return false;
-				}
+			do {
+				quitGame = battlePhase(P2, 0, gRenderer);
+				SDL_Delay(800);
+			} while (quitGame == CONTINUE_TURN);
+
+			if (!P2.continueGame()) {
+				//Winning scene add here
+				cout << "p1 wins\n";
+				return false;
 			}
+
 			if (quitGame == QUIT_GAME)	return true;
 			//Transition scene add here
 			cout << endl << "Change Turn" << endl;
 
 			//p2 turn
-			while ((quitGame = battlePhase(P1, 0, gRenderer)) == CONTINUE_TURN) {
-				cout << endl << endl << " " << P1.continueGame() << endl;
-				if (!P1.continueGame()) {
-					//Winning scene add here
-					cout << "p2 wins\n";
-					return false;
-				}
+			do {
+				quitGame = battlePhase(P1, cpu, gRenderer);
+				SDL_Delay(800);
+			} while (quitGame == CONTINUE_TURN);
+
+			if (!P1.continueGame()) {
+				//Winning scene add here
+				cout << "p2 wins\n";
+				return false;
 			}
+
 			if (quitGame == QUIT_GAME)	return true;
 			//Transition scene add here
 			cout << endl << "Change Turn" << endl;
@@ -113,17 +140,16 @@ bool Game::mainGame(int cpu, SDL_Renderer* &gRenderer) {
 
 int Game::deployPhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 	if (cpu) {
-		srand(time(0));
 		for (int i = 1;i <= BOARD_SIDE;++i) {
 			bool placeCorrect;
+			int dir, x, y;
 			do {
 				placeCorrect = false;
-				//dir : 0 = horizontal; 1 = vertical
-				int dir, x, y;
-				dir = rand() % 2;
+				dir = rand() % 4;
 				x = rand() % 10 + 1, y = rand() % 10 + 1;
 				placeCorrect = p.checkShipPosition(x, y, dir, i);
 			} while (!placeCorrect);
+			p.createShip(x, y, dir, i);
 		}
 		return END_TURN;
 	}
@@ -132,13 +158,12 @@ int Game::deployPhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 		int shipCount = 1;
 
 		//initial set up
-		int dir = 4, x = 0, y = 0;
+		int dir = UNDEFINED, x = 0, y = 0;
 
 		SDL_Event e;
 
 		while (!quitGame)
 		{
-			
 			//Handle events on queue
 			while (SDL_PollEvent(&e) != 0)
 			{
@@ -151,12 +176,24 @@ int Game::deployPhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 					//choose position for ship head
 					for (int i = 1; i <= BOARD_SIDE; ++i) {
 						for (int j = 1;j <= BOARD_SIDE; ++j) {
-							if (p.emptyPosition(j, i)) {
+							if (p.currentState(j, i)==SHIP_NONE && x==0 && y==0) {
 								if (gButtons[i][j].handleEvent(&e)) {
 									//Sth happens here
 									x = j;
 									y = i;
-									cout << x << " " << y << endl;
+									//Create ship asap when ship length is only 1 (skip direction choice)
+									if (shipCount >= 7) {
+										p.createShip(x, y, 0, shipCount);
+										shipCount++;
+										//reset
+										x = 0;
+										y = 0;
+										dir = UNDEFINED;
+									}
+									//Create ship nose with dir = 5 (undefined)
+									else {
+										p.createShip(x, y, dir, shipCount);
+									}
 								}
 							}
 						}
@@ -170,19 +207,21 @@ int Game::deployPhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 								if (p.checkShipPosition(x, y, dir, shipCount)) {
 									p.createShip(x, y, dir, shipCount);
 									shipCount++;
-									//reset
-									x = 0;
-									y = 0;
 								}
 								else {
 									//add cant place here
 									cout << "CANT PLACE" << endl;
 								}
+								//reset
+								x = 0;
+								y = 0;
+								dir = UNDEFINED;
 							}
 						}
 					}
 				}
 			}
+
 			//Clear screen
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 			SDL_RenderClear(gRenderer);
@@ -202,6 +241,12 @@ int Game::deployPhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 				gArrow[i].render(gArrowSpriteSheetTexture, gRenderer, ARROW_ANGLE[i]);
 			}
 
+			for (int i = 1;i <= BOARD_SIDE;++i) {
+				for (int j = 1;j <= BOARD_SIDE;++j) {
+					gGridSpriteSheetTexture.render(GRID_WIDTH[i][j], GRID_HEIGHT[i][j], gRenderer, gSpriteClips[p.currentState(j,i)]);
+				}
+			}
+
 			//Update screen
 			SDL_RenderPresent(gRenderer);
 
@@ -215,7 +260,6 @@ int Game::deployPhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 	}
 }
 
-
 int Game::battlePhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 	int quitGame = CONTINUE_TURN;
 
@@ -224,29 +268,45 @@ int Game::battlePhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 	while (quitGame == CONTINUE_TURN)
 	{
 		//Handle events on queue
-		while (SDL_PollEvent(&e) != 0)
-		{
+		while (SDL_PollEvent(&e) != 0){
 			//X out of game
-			if (e.type == SDL_QUIT)
-			{
+			if (e.type == SDL_QUIT){
 				quitGame = QUIT_GAME;
 				break;
 			}
-			for (int i = 1; i <= BOARD_SIDE; ++i) {
+			if (cpu) {
+				int x, y;
+				do {
+					x = rand() % BOARD_SIDE + 1;
+					y = rand() % BOARD_SIDE + 1;
+					cout << x << " " << y << endl;
+				} while (p.currentState(x, y) >= SHIP_HIT);
+				SDL_Delay(800);
+				if (!p.fireHit(x, y)) {
+					quitGame = END_TURN;
+					break;
+				}
+				else if (!p.continueGame()) {
+					quitGame = END_TURN;
+					break;
+				}
+			}
+			else for (int i = 1; i <= BOARD_SIDE; ++i) {
 				for (int j = 1;j <= BOARD_SIDE; ++j) {
-					if (cpu) {
-						int x, y;
-						x = rand() % BOARD_SIDE + 1;
-						y = rand() % BOARD_SIDE + 1;
-					}
-					else if (gButtons[i][j].handleEvent(&e)) {
-						//Sth happens here
-						if (!p.fireHit(j, i)) {
-							quitGame = END_TURN;
+					if (p.currentState(j, i) < SHIP_HIT) {
+						if (gButtons[i][j].handleEvent(&e)) {
+							//Sth happens here
+							SDL_Delay(300);
+							if (!p.fireHit(j, i)) {
+								quitGame = END_TURN;
+							}
+							else if (!p.continueGame()) {
+								quitGame = END_TURN;
+							}
 						}
 					}
 				}
-			}	
+			}
 		}
 		//Clear screen
 		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -262,9 +322,18 @@ int Game::battlePhase(sG &p, int cpu, SDL_Renderer* &gRenderer) {
 				gButtons[i][j].render(gButtonSpriteSheetTexture, gRenderer);
 			}
 		}
+
+		for (int i = 1;i <= BOARD_SIDE;++i) {
+			for (int j = 1;j <= BOARD_SIDE;++j) {
+				//normal mode
+				//int battleState = (p.currentState(j,i) <= 2) ? 0 : p.currentState(j, i);
+				//god mode (debug for now)
+				int battleState = p.currentState(j, i);
+				gGridSpriteSheetTexture.render(GRID_WIDTH[i][j], GRID_HEIGHT[i][j], gRenderer, gSpriteClips[battleState]);
+			}
+		}
 		//Update screen
 		SDL_RenderPresent(gRenderer);
-
 	}
 	return quitGame;
 	/*
